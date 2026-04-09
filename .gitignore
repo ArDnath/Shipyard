@@ -1,0 +1,32 @@
+# --- PNPM Specific ---
+node_modules/
+.pnpm-debug.log*
+# pnpm setup files
+.pnpm-store/
+# If using virtual-store-dir setting
+.pnpm/
+
+# --- Workspace & Build Artifacts ---
+# Add common build folders used across your packages
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# --- Environment & Sensitive Files ---
+.env
+.env.*
+!.env.example
+
+# --- Editor & OS Files ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
