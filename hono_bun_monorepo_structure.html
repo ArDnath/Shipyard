@@ -1,0 +1,247 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.tree{padding:1rem 0;line-height:1.9;font-family:var(--font-mono);font-size:13px}
+.folder{color:var(--color-text-primary);font-weight:500;cursor:pointer;user-select:none;display:flex;align-items:center;gap:6px}
+.folder:hover{color:var(--color-text-info)}
+.file{color:var(--color-text-secondary);display:flex;align-items:center;gap:6px}
+.file:hover{color:var(--color-text-primary)}
+.badge{font-size:10px;padding:2px 7px;border-radius:10px;font-family:var(--font-sans);font-weight:500;white-space:nowrap;margin-left:4px}
+.hono{background:#FAECE7;color:#712B13}
+.bun{background:#FAEEDA;color:#633806}
+.ts{background:#EEEDFE;color:#3C3489}
+.next{background:#E1F5EE;color:#085041}
+.gray{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.cf{background:#E6F1FB;color:#0C447C}
+@media(prefers-color-scheme:dark){
+  .hono{background:#4A1B0C;color:#F0997B}
+  .bun{background:#412402;color:#FAC775}
+  .ts{background:#26215C;color:#CECBF6}
+  .next{background:#04342C;color:#9FE1CB}
+  .cf{background:#042C53;color:#85B7EB}
+}
+.i1{padding-left:18px}.i2{padding-left:36px}.i3{padding-left:54px}.i4{padding-left:72px}
+.chevron{font-size:10px;opacity:0.4;transition:transform 0.15s;display:inline-block;min-width:10px}
+.collapsed>.chevron{transform:rotate(-90deg)}
+.collapsed+.children{display:none}
+.sep{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:8px 0}
+.tip{font-family:var(--font-sans);font-size:11px;color:var(--color-text-tertiary);padding:0 0 3px 24px}
+</style>
+<div class="tree">
+
+<div class="folder" onclick="toggle(this)"><span class="chevron">▼</span> deploystack/ <span class="badge gray">workspace root</span></div>
+<div class="children">
+
+  <div class="i1 tip">One package.json to rule them all — Bun workspaces, no pnpm needed</div>
+  <div class="i1 file">📄 package.json <span class="badge bun">bun workspaces</span></div>
+  <div class="i1 file">📄 bun.lockb</div>
+  <div class="i1 file">📄 turbo.json <span class="badge gray">build pipeline</span></div>
+  <div class="i1 file">📄 tsconfig.base.json <span class="badge ts">shared TS config</span></div>
+  <div class="i1 file">📄 Makefile <span class="badge gray">dev, test, build</span></div>
+  <div class="i1 file">📄 docker-compose.yml <span class="badge gray">postgres + redis local</span></div>
+  <div class="i1 file">📄 .env.example</div>
+  <div class="i1 file">📄 README.md</div>
+
+  <hr class="sep i1">
+
+  <!-- SERVICES -->
+  <div class="i1 folder" onclick="toggle(this)"><span class="chevron">▼</span> services/ <span class="badge gray">all runnable apps</span></div>
+  <div class="children">
+
+    <!-- API -->
+    <div class="i2 folder" onclick="toggle(this)"><span class="chevron">▼</span> api/ <span class="badge hono">Hono + Bun</span></div>
+    <div class="children">
+      <div class="i3 tip">Control plane — auth, projects, deployments, domains, webhooks</div>
+      <div class="i3 file">📄 package.json</div>
+      <div class="i3 file">📄 tsconfig.json</div>
+      <div class="i3 file">📄 src/index.ts <span class="badge gray">Hono app entry</span></div>
+      <div class="i3 folder" onclick="toggle(this)"><span class="chevron">▼</span> src/routes/</div>
+      <div class="children">
+        <div class="i4 file">📄 projects.ts</div>
+        <div class="i4 file">📄 deployments.ts</div>
+        <div class="i4 file">📄 domains.ts</div>
+        <div class="i4 file">📄 webhooks.ts <span class="badge gray">GitHub push events</span></div>
+        <div class="i4 file">📄 envvars.ts</div>
+      </div>
+      <div class="i3 folder" onclick="toggle(this)"><span class="chevron">▼</span> src/middleware/</div>
+      <div class="children">
+        <div class="i4 file">📄 auth.ts <span class="badge gray">JWT verify</span></div>
+        <div class="i4 file">📄 rateLimit.ts</div>
+      </div>
+      <div class="i3 folder" onclick="toggle(this)"><span class="chevron">▼</span> src/db/</div>
+      <div class="children">
+        <div class="i4 file">📄 schema.ts <span class="badge ts">Drizzle schema</span></div>
+        <div class="i4 file">📄 client.ts</div>
+        <div class="i4 file">📄 migrations/ </div>
+      </div>
+      <div class="i3 file">📄 src/queue/producer.ts <span class="badge bun">publish deploy job</span></div>
+      <div class="i3 file">📄 src/types.ts <span class="badge hono">export AppType</span></div>
+      <div class="i3 file">📄 Dockerfile</div>
+    </div>
+
+    <!-- BUILDER -->
+    <div class="i2 folder" onclick="toggle(this)"><span class="chevron">▼</span> builder/ <span class="badge bun">Bun worker</span></div>
+    <div class="children">
+      <div class="i3 tip">Queue consumer — detect framework, sandbox build, upload to S3, stream logs</div>
+      <div class="i3 file">📄 package.json</div>
+      <div class="i3 file">📄 src/index.ts <span class="badge gray">worker entrypoint</span></div>
+      <div class="i3 folder" onclick="toggle(this)"><span class="chevron">▼</span> src/</div>
+      <div class="children">
+        <div class="i4 file">📄 worker.ts <span class="badge bun">asynq consumer</span></div>
+        <div class="i4 file">📄 detect.ts <span class="badge gray">framework detection</span></div>
+        <div class="i4 file">📄 sandbox.ts <span class="badge hono">Docker isolation</span></div>
+        <div class="i4 file">📄 logstream.ts <span class="badge gray">SSE push to API</span></div>
+        <div class="i4 file">📄 cache.ts <span class="badge gray">S3 layer cache</span></div>
+        <div class="i4 folder" onclick="toggle(this)"><span class="chevron">▼</span> steps/</div>
+        <div class="children">
+          <div class="i4 file" style="padding-left:18px">📄 install.ts</div>
+          <div class="i4 file" style="padding-left:18px">📄 build.ts</div>
+          <div class="i4 file" style="padding-left:18px">📄 upload.ts <span class="badge gray">→ S3/R2</span></div>
+          <div class="i4 file" style="padding-left:18px">📄 routes.ts <span class="badge gray">generate routes.json</span></div>
+        </div>
+      </div>
+      <div class="i3 file">📄 Dockerfile</div>
+      <div class="i3 file">📄 sandbox.Dockerfile <span class="badge hono">untrusted image</span></div>
+    </div>
+
+    <!-- ROUTER -->
+    <div class="i2 folder" onclick="toggle(this)"><span class="chevron">▼</span> router/ <span class="badge cf">Hono → CF Workers</span></div>
+    <div class="children">
+      <div class="i3 tip">The edge proxy — deploys to Cloudflare Workers, zero cold starts</div>
+      <div class="i3 file">📄 package.json</div>
+      <div class="i3 file">📄 wrangler.toml <span class="badge cf">CF Workers config</span></div>
+      <div class="i3 file">📄 src/index.ts <span class="badge hono">Hono app</span></div>
+      <div class="i3 folder" onclick="toggle(this)"><span class="chevron">▼</span> src/</div>
+      <div class="children">
+        <div class="i4 file">📄 resolver.ts <span class="badge gray">domain → deployment</span></div>
+        <div class="i4 file">📄 rules.ts <span class="badge hono">rewrites, redirects</span></div>
+        <div class="i4 file">📄 static.ts <span class="badge gray">proxy to R2/S3</span></div>
+        <div class="i4 file">📄 fn-runner.ts <span class="badge gray">invoke serverless fn</span></div>
+        <div class="i4 file">📄 ssl.ts <span class="badge cf">CF handles TLS</span></div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="i2 folder" onclick="toggle(this)"><span class="chevron">▼</span> dashboard/ <span class="badge next">Next.js 15</span></div>
+    <div class="children">
+      <div class="i3 tip">Deploy this on your own platform — the dogfood moment</div>
+      <div class="i3 file">📄 package.json</div>
+      <div class="i3 folder" onclick="toggle(this)"><span class="chevron">▼</span> app/</div>
+      <div class="children">
+        <div class="i4 file">📄 (auth)/login/page.tsx</div>
+        <div class="i4 file">📄 projects/page.tsx</div>
+        <div class="i4 file">📄 projects/[id]/page.tsx</div>
+        <div class="i4 file">📄 projects/[id]/deployments/[dId]/page.tsx</div>
+      </div>
+      <div class="i3 folder" onclick="toggle(this)"><span class="chevron">▼</span> components/</div>
+      <div class="children">
+        <div class="i4 file">📄 LogStream.tsx <span class="badge gray">SSE live logs</span></div>
+        <div class="i4 file">📄 DeployButton.tsx</div>
+        <div class="i4 file">📄 DomainManager.tsx</div>
+        <div class="i4 file">📄 DeploymentStatus.tsx</div>
+      </div>
+      <div class="i3 file">📄 Dockerfile</div>
+    </div>
+
+    <!-- CLI -->
+    <div class="i2 folder" onclick="toggle(this)"><span class="chevron">▼</span> cli/ <span class="badge bun">Bun → single binary</span></div>
+    <div class="children">
+      <div class="i3 tip">bun build --compile outputs a single binary, no Node required</div>
+      <div class="i3 file">📄 package.json</div>
+      <div class="i3 file">📄 src/index.ts <span class="badge gray">commander entrypoint</span></div>
+      <div class="i3 folder" onclick="toggle(this)"><span class="chevron">▼</span> src/commands/</div>
+      <div class="children">
+        <div class="i4 file">📄 deploy.ts</div>
+        <div class="i4 file">📄 dev.ts</div>
+        <div class="i4 file">📄 logs.ts</div>
+        <div class="i4 file">📄 env.ts</div>
+        <div class="i4 file">📄 login.ts</div>
+      </div>
+      <div class="i3 file">📄 src/api.ts <span class="badge hono">hc&lt;AppType&gt; client</span></div>
+      <div class="i3 file">📄 src/auth.ts <span class="badge gray">token in ~/.deploystack</span></div>
+      <div class="i3 file">📄 src/link.ts <span class="badge gray">deploystack.json</span></div>
+    </div>
+
+  </div>
+
+  <hr class="sep i1">
+
+  <!-- PACKAGES -->
+  <div class="i1 folder" onclick="toggle(this)"><span class="chevron">▼</span> packages/ <span class="badge ts">shared TS packages</span></div>
+  <div class="children">
+
+    <div class="i2 folder" onclick="toggle(this)"><span class="chevron">▼</span> types/ <span class="badge ts">single source of truth</span></div>
+    <div class="children">
+      <div class="i3 tip">Every service imports from here — zero drift</div>
+      <div class="i3 file">📄 src/deployment.ts</div>
+      <div class="i3 file">📄 src/project.ts</div>
+      <div class="i3 file">📄 src/domain.ts</div>
+      <div class="i3 file">📄 src/queue.ts <span class="badge gray">job payload shapes</span></div>
+      <div class="i3 file">📄 src/routes.ts <span class="badge gray">routes.json shape</span></div>
+      <div class="i3 file">📄 package.json</div>
+    </div>
+
+    <div class="i2 folder" onclick="toggle(this)"><span class="chevron">▼</span> api-client/ <span class="badge hono">Hono RPC client</span></div>
+    <div class="children">
+      <div class="i3 tip">hc&lt;AppType&gt; — fully typed, zero codegen, used by dashboard + cli</div>
+      <div class="i3 file">📄 src/index.ts</div>
+      <div class="i3 file">📄 package.json</div>
+    </div>
+
+    <div class="i2 folder" onclick="toggle(this)"><span class="chevron">▼</span> db/ <span class="badge ts">Drizzle + migrations</span></div>
+    <div class="children">
+      <div class="i3 tip">Shared schema — api and builder both import this</div>
+      <div class="i3 file">📄 src/schema.ts</div>
+      <div class="i3 file">📄 src/client.ts</div>
+      <div class="i3 file">📄 drizzle.config.ts</div>
+      <div class="i3 file">📄 migrations/</div>
+      <div class="i3 file">📄 package.json</div>
+    </div>
+
+    <div class="i2 folder" onclick="toggle(this)"><span class="chevron">▼</span> queue/ <span class="badge bun">job definitions</span></div>
+    <div class="children">
+      <div class="i3 tip">Shared producer/consumer helpers — typed job payloads</div>
+      <div class="i3 file">📄 src/client.ts <span class="badge gray">Redis connection</span></div>
+      <div class="i3 file">📄 src/jobs.ts <span class="badge gray">job type registry</span></div>
+      <div class="i3 file">📄 package.json</div>
+    </div>
+
+    <div class="i2 folder" onclick="toggle(this)"><span class="chevron">▼</span> config/ <span class="badge ts">env validation</span></div>
+    <div class="children">
+      <div class="i3 tip">Zod schemas for env vars — crash early on missing config</div>
+      <div class="i3 file">📄 src/index.ts</div>
+      <div class="i3 file">📄 package.json</div>
+    </div>
+
+    <div class="i2 folder" onclick="toggle(this)"><span class="chevron">▼</span> tsconfig/ <span class="badge gray">shared TS configs</span></div>
+    <div class="children">
+      <div class="i3 file">📄 base.json</div>
+      <div class="i3 file">📄 bun.json</div>
+      <div class="i3 file">📄 nextjs.json</div>
+      <div class="i3 file">📄 cloudflare.json</div>
+    </div>
+
+  </div>
+
+  <hr class="sep i1">
+
+  <div class="i1 folder" onclick="toggle(this)"><span class="chevron">▼</span> infra/ <span class="badge gray">Terraform</span></div>
+  <div class="children">
+    <div class="i2 file">📄 main.tf</div>
+    <div class="i2 file">📄 s3.tf</div>
+    <div class="i2 file">📄 rds.tf</div>
+    <div class="i2 file">📄 redis.tf</div>
+    <div class="i2 file">📄 ecr.tf</div>
+  </div>
+
+  <div class="i1 folder" onclick="toggle(this)"><span class="chevron">▼</span> .github/workflows/</div>
+  <div class="children">
+    <div class="i2 file">📄 ci.yml <span class="badge gray">typecheck + test all</span></div>
+    <div class="i2 file">📄 deploy-api.yml</div>
+    <div class="i2 file">📄 deploy-router.yml <span class="badge cf">wrangler deploy</span></div>
+    <div class="i2 file">📄 deploy-dashboard.yml <span class="badge next">deploys on itself</span></div>
+  </div>
+
+</div>
+</div>
+<script>function toggle(el){el.classList.toggle('collapsed')}</script>
