@@ -1,32 +1,68 @@
-# --- PNPM Specific ---
+# --- Dependencies ---
 node_modules/
-.pnpm-debug.log*
-# pnpm setup files
 .pnpm-store/
-# If using virtual-store-dir setting
 .pnpm/
 
-# --- Workspace & Build Artifacts ---
-# Add common build folders used across your packages
+# --- Build Artifacts ---
 dist/
 build/
 out/
+.next/
+.svelte-kit/
+.nuxt/
+.output/
 *.tsbuildinfo
+.turbo/
 
 # --- Environment & Sensitive Files ---
 .en
 .env.*
 !.env.example
 
+# --- Bun ---
+bun.lockb
+
+# --- Husky ---
+.husky/_
+
+# --- Biome ---
+.biome/
+
 # --- Editor & OS Files ---
 .vscode/
 .idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 .DS_Store
 Thumbs.db
 
 # --- Logs ---
-logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+bun-debug.log*
+
+# --- Terraform ---
+infra/.terraform/
+infra/.terraform.lock.hcl
+infra/*.tfstate
+infra/*.tfstate.*
+infra/*.tfvars
+infra/crash.log
+
+# --- Docker ---
+.dockerignore
+
+# --- Test Coverage ---
+coverage/
+.nyc_output/
+
+# --- Misc ---
+*.pem
+.cache/
+tmp/
+temp/
