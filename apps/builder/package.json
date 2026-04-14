@@ -1,0 +1,17 @@
+{
+  "name": "builder",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --hot src/index.ts",
+    "start": "bun run src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "docker:build": "docker build -t shipyard-builder .",
+    "docker:rebuild": "docker build --no-cache -t shipyard-builder ."
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.4.5"
+  }
+}
