@@ -2,12 +2,8 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { sanitizeGitHubUrl } from './validate';
 
-// ─── Constants ─────────────────────────────────────────────────────────────
-
 const CLONE_TIMEOUT_MS = 30_000; // 30 seconds max per clone
-const BASE_PATH = path.join('/tmp', 'shipyard');
-
-// ─── Types ─────────────────────────────────────────────────────────────────
+const BASE_PATH = path.join(process.cwd(), 'shipyard');
 
 export type CloneResult =
   | {
@@ -22,10 +18,6 @@ export type CloneResult =
       cloneId: string;
       error: string;
     };
-
-// ─── Error parser ──────────────────────────────────────────────────────────
-// Turns raw git stderr into a single clean sentence.
-// Never leaks internal paths or tokens to the caller.
 
 function parseGitError(stderr: string, timedOut: boolean): string {
   if (timedOut) {
@@ -120,11 +112,9 @@ export async function cloneRepo(
     const exitCode = await proc.exited;
     clearTimeout(timer);
 
-    // ── Failure path ────────────────────────────────────────────────────────
     if (exitCode !== 0 || timedOut) {
       const stderr = await new Response(proc.stderr).text();
 
-      // Remove any partial directory left behind so disk doesn't fill up
       fs.rmSync(projectPath, { recursive: true, force: true });
 
       return {

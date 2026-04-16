@@ -13,10 +13,6 @@ app.get('/', (c) => {
   return c.json({ status: 'ok', service: 'Shipyard API' });
 });
 
-// ─── POST /clone ───────────────────────────────────────────────────────────
-// Lightweight route — just clones the repo to /tmp/shipyard/<uuid>.
-// Useful for debugging and verifying URL/branch before a full build.
-
 app.post('/clone', validateBody(deploySchema), async (c) => {
   const body = c.get('validatedBody') as DeployInput;
 
@@ -42,16 +38,6 @@ app.post('/clone', validateBody(deploySchema), async (c) => {
     201,
   );
 });
-
-// ─── POST /deploy ──────────────────────────────────────────────────────────
-// Full build pipeline:
-//   1. Validate request body
-//   2. Create isolated workspace  → /tmp/shipyard/<uuid>
-//   3. docker run --rm with volume mount
-//   4. Inside container: clone → install → build
-//   5. Verify output directory exists on host (via volume)
-//   6. Return outputPath to the caller
-//   7. Caller is responsible for uploading/extracting output, then cleanup
 
 app.post('/deploy', validateBody(deploySchema), async (c) => {
   const body = c.get('validatedBody') as DeployInput;

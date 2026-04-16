@@ -2,14 +2,8 @@ import * as fs from 'node:fs';
 import type { BuildConfig, BuildResult } from './types';
 import { cleanupWorkspace, createWorkspace, resolveOutputPath } from './workspace';
 
-// ─── Constants ─────────────────────────────────────────────────────────────
-
 const DOCKER_IMAGE = 'shipyard-builder';
 const BUILD_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
-
-// ─── Error parser ──────────────────────────────────────────────────────────
-// Maps raw Docker/build stderr into a clean one-liner.
-// Never exposes internal paths or host details to the caller.
 
 function parseRunnerError(
   stdout: string,

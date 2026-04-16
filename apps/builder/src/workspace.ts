@@ -3,7 +3,7 @@ import * as path from 'node:path';
 
 // ─── Constants ─────────────────────────────────────────────────────────────
 
-export const BASE_PATH = '/tmp/shipyard';
+export const BASE_PATH = path.join(process.cwd(), 'data/shipyard');
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
